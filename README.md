@@ -9,6 +9,8 @@ There are two ways to rollback a commit:
 
 The former only rollback a commit specifically. The later rollback *all* the commits up-to the specific commit. For now, it is better to just use revert as it is easier to learn and manage.
 
+[how-to-undo-almost-anything-with-git](https://github.blog/2015-06-08-how-to-undo-almost-anything-with-git/)
+
 ## Example
 We will add five files to the repo, one at a time.
 ```bash
