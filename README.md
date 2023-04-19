@@ -7,7 +7,7 @@ There are two ways to rollback a commit:
 1. `git revert` or
 2. `git reset`
 
-The former only rollback a commit specifically. The later rollback *all* the commits up-to the specific commit. For now, it is better to just use revert as it is easier to learn and manage.
+The former only rollback a commit specifically. The latter rollback *all* the commits up-to the specific commit. For now, it is better to just use revert as it is easier to learn and manage.
 
 [how-to-undo-almost-anything-with-git](https://github.blog/2015-06-08-how-to-undo-almost-anything-with-git/)
 
