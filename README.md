@@ -70,6 +70,9 @@ git reset f2f0b6b
 
 ### Identity
 
+<details>
+<summary>Git Identity</summary>
+
 [Doc](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup)
 
 The first thing you should do when you install Git is to set your user name and email address. This is important because every Git commit uses this information, and it’s immutably baked into the commits you start creating:
@@ -85,8 +88,12 @@ To check on the current settings
 ```bash
 git config --global --edit
 ```
+</details>
 
 ### VI Editing Commands
+
+<details>
+<summary>Basic vi commands</summary>
 
 [An introduction to the vi editor](https://www.redhat.com/sysadmin/introduction-vi-editor) <br>
 [Basic vi Commands](https://www.cs.colostate.edu/helpdocs/vi.html)
@@ -118,3 +125,5 @@ h — Move left one character.<br>
 j — Move down one line.<br>
 k — Move up one line.<br>
 l — Move right one character.<br>
+
+</details>
