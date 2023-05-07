@@ -7,7 +7,7 @@ There are two ways to rollback a commit:
 1. `git revert` or
 2. `git reset`
 
-The former only rollback a commit specifically. The latter rollback *all* the commits up-to the specific commit. For now, it is better to just use revert as it is easier to learn and manage.
+The former only rollback a commit specifically. The latter rollback *all* the commits up-to the specific commit.
 
 [how-to-undo-almost-anything-with-git](https://github.blog/2015-06-08-how-to-undo-almost-anything-with-git/)
 
@@ -50,10 +50,21 @@ Revert the commit of 8cb0b0a
 git revert 8cb0b0a
 ```
 
+Reset back to commit of f2f0b6b
+```bash
+# Option 1
+git reset --hard f2f0b6b
+# This will delete all the files from the commit proceeding f2f0b6b
+
+# Option 2
+git reset f2f0b6b
+# This will go back to commit f2f0b6b but proceeding files will not be deleted
+```
+
 
 ## BASH Reference
 - `touch` [Doc](https://man7.org/linux/man-pages/man1/touch.1.html) - Change file timestamps `touch [option]... file`
-- `&&` is the condition AND [BASH Cheatsheet](https://devhints.io/bash)
+- `&&` is the condition **AND** [BASH Cheatsheet](https://devhints.io/bash)
 
 ## Appendix
 
