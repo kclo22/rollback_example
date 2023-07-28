@@ -68,10 +68,11 @@ git reset f2f0b6b
 
 ## Appendix
 
-### Identity
 
 <details>
-<summary>Git Identity</summary>
+<summary>Git Identity - Set Global User Details</summary>
+
+### Git Identity - Set Global User Details
 
 [Doc](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup)
 
@@ -90,10 +91,69 @@ git config --global --edit
 ```
 </details>
 
-### VI Editing Commands
+<details><summary>git fetch vs git pull</summary>
+
+### git fetch vs git pull
+
+- [What is the difference between 'git pull' and 'git fetch'?](https://stackoverflow.com/questions/292357/what-is-the-difference-between-git-pull-and-git-fetch) stackoverflow.
+
+> In the simplest terms, `git pull` does a `git fetch` followed by a `git merge`.
+
+> `git fetch` updates your remote-tracking branches under `refs/remotes/<remote>/`. This operation is safe to run at any time since it never changes any of your local branches under `refs/heads`.
+
+> `git pull` brings a local branch up-to-date with its remote version, while also updating your other remote-tracking branches.
+
+- [git-fetch](https://git-scm.com/docs/git-fetch) documentation - Download objects and refs from another repository.
+- [git-pull](https://git-scm.com/docs/git-pull) documentation - `git pull` runs `git fetch` with the given parameters and then depending on configuration options or command line flags, will call either `git rebase` or `git merge` to reconcile diverging branches.
+
+</details>
+
+<details><summary>How to check if a local repo is up to date?</summary>
+
+### How to check if a local repo is up to date?
+
+- [How to check if a local repo is up to date?](https://stackoverflow.com/questions/7938723/git-how-to-check-if-a-local-repo-is-up-to-date) stackoverflow.
+
+First use `git remote update`, to bring your remote refs up to date. Then you can do one of several things, such as:
+
+<details><summary>git remote details</summary>
+
+- [git remote](https://git-scm.com/docs/git-remote) documentation - Manage the set of repositories ("remotes") whose branches you track.
+	- [update](https://git-scm.com/docs/git-remote#Documentation/git-remote.txt-emupdateem) - Fetch updates for remotes or remote groups in the repository as defined by `remotes.\<group\>`.
+</details>
+<br>
+
+1. `git status -uno` will tell you whether the branch you are tracking is ahead, behind or has diverged. If it says nothing, the local and remote are the same. 
+
+<details><summary>git status details</summary>
+
+- [git status](https://git-scm.com/docs/git-status) documentation - Show the working tree status.
+	- [u\[\<mode\>\]](https://git-scm.com/docs/git-status#Documentation/git-status.txt--ultmodegt) - Show untracked files.
+		- The mode parameter is used to specify the handling of untracked files. It is optional: it defaults to **all**, and if specified, it must be stuck to the option (e.g. `-uno`, but not `-u no`).
+	- The possible options are:
+		- **no** - Show no untracked files.
+		- **normal** - Shows untracked files and directories.
+		- **all** - Also shows individual files in untracked directories.
+
+</details>
+<br>
+
+Sample result:
+
+```text
+On branch DEV
+
+Your branch is behind 'origin/DEV' by 7 commits, and can be fast-forwarded.
+
+(use "git pull" to update your local branch)
+```
+
+</details>
 
 <details>
-<summary>Basic vi commands</summary>
+<summary>VI Editing - Basic vi commands</summary>
+
+### VI Editing - Basic vi commands
 
 [An introduction to the vi editor](https://www.redhat.com/sysadmin/introduction-vi-editor) <br>
 [Basic vi Commands](https://www.cs.colostate.edu/helpdocs/vi.html)
