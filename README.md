@@ -61,6 +61,13 @@ git reset f2f0b6b
 # This will go back to commit f2f0b6b but proceeding files will not be deleted
 ```
 
+[Resetting remote to a certain commit](https://stackoverflow.com/questions/5816688/resetting-remote-to-a-certain-commit) Stackoverflow.
+> Assuming that your branch is called master both here and remotely, and that your remote is called origin you could do:
+```zsh
+git reset --hard <commit-hash>
+git push -f origin master
+```
+
 
 ## BASH Reference
 - `touch` [Doc](https://man7.org/linux/man-pages/man1/touch.1.html) - Change file timestamps `touch [option]... file`
