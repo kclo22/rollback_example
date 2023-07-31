@@ -181,8 +181,8 @@ Your branch is behind 'origin/DEV' by 7 commits, and can be fast-forwarded.
 
 The *Rebase* Option
 ```
-					    D1"*---E1"*---F"* Feature
-					   /			           
+		        D1"*---E1"*---F"* Feature
+		       /			           
     A---B---C^---D^---E^
 
 " Feature
@@ -192,8 +192,8 @@ The *Rebase* Option
 
 The *Merge* Option
 ```
-			  D1---E1---F---G* Feature
-			 /			   /         
+	      D1---E1---F---G* Feature
+	     /		   /         
     A---B---C------D------E Main
 
 * Merge Commit
@@ -202,15 +202,15 @@ The *Merge* Option
 
 **Situation B**
 ```
-			  D---E---F Feature
-			 /         
+	      D---E---F Feature
+	     /         
     A---B---C Main
 ```
 
 The *Fast Forward* Option
 ```
-			  D---E---F Main
-			 /			           
+	      D---E---F Main
+	     /			           
     A---B---C
 ```
 </details>
@@ -333,8 +333,185 @@ a73ad43 HEAD@{8}: commit (initial): 1st git commit: 1 file
 <br>
 </details>
 
-<details>
-<summary>VI Editing - Basic vi commands</summary>
+<details><summary>Branch & Merge</summary>
+
+### Branch & Merge
+
+#### Summary
+
+1. `git branch <branchname>` - Branch Creation
+2. `git checkout <branchname>` - Switch to Branch
+3. `git merge <branchname>` - Merge `<branchname>` into Current Branch
+
+<details><summary>Intro</summary>
+
+## Intro
+
+- [Git Branch](https://www.atlassian.com/git/tutorials/using-branches) tutorial.
+
+When you want to add a new feature or fix a bug—no matter how big or how small—you spawn a new branch to encapsulate your changes. This makes it harder for unstable code to get merged into the main code base, and it gives you the chance to clean up your future's history before merging it into the main branch.
+
+```zsh
+		  B1 Little Feature
+		 /         
+    A---B---C---D Main
+    		 \
+    		  C1---D1---E1 Big Feature
+
+```
+
+The diagram above visualizes a repository with two isolated lines of development, one for a little feature, and one for a longer-running feature. By developing them in branches, it’s not only possible to work on both of them in parallel, but it also keeps the `main` branch free from questionable code.
+</details>
+
+<details><summary>Commands</summary>
+
+## Commands
+
+<details><summary>git branch - 1st Form - Listing Existing Branches</summary>
+
+### git branch - 1st Form - Listing Existing Branches
+
+- [git branch](https://git-scm.com/docs/git-branch#_synopsis) documentation.
+```
+git branch [--color[=<when>] | --no-color] [--show-current]
+	[-v [--abbrev=<n> | --no-abbrev]]
+	[--column[=<options>] | --no-column] [--sort=<key>]
+	[--merged [<commit>]] [--no-merged [<commit>]]
+	[--contains [<commit>]] [--no-contains [<commit>]]
+	[--points-at <object>] [--format=<format>]
+	[(-r | --remotes) | (-a | --all)]
+	[--list] [<pattern>...]
+```
+- If `--list` is given, or if there are no non-option arguments, existing branches are listed; the current branch will be highlighted in green and marked with an asterisk.
+</details>
+
+<details><summary>git branch - 2nd Form - Branch Creation</summary>
+
+### git branch - 2nd Form - Branch Creation
+
+- [git branch](https://git-scm.com/docs/git-branch#_synopsis) documentation.
+```
+git branch [--track[=(direct|inherit)] | --no-track] [-f]
+	[--recurse-submodules] <branchname> [<start-point>]
+```
+- The command’s second form creates a new branch head named `<branchname>` which points to the current HEAD, or `<start-point>` if given.
+
+</details>
+
+<details><summary>git branch -d - Delete Branch</summary>
+
+### git branch -d - Delete Branch
+
+- [git branch](https://git-scm.com/docs/git-branch#_synopsis) documentation.
+```
+git branch (-d | -D) [-r] <branchname>...
+```
+- With a `-d` or `-D` option, `<branchname>` will be deleted. You may specify more than one branch for deletion. If the branch currently has a reflog then the reflog will also be deleted.
+- Use `-r` together with `-d` to delete remote-tracking branches.
+
+#### OPTION
+
+`-d`<br>
+`--delete`<br>
+Delete a branch. The branch must be fully merged in its upstream branch, or in `HEAD` if no upstream was set with `--track` or `--set-upstream-to`.
+- [Command Options](https://www.atlassian.com/git/tutorials/using-branches) 
+> This is a “safe” operation in that Git prevents you from deleting the branch if it has unmerged changes.
+
+`-D`<br>
+Shortcut for `--delete --force`.
+- [Command Options](https://www.atlassian.com/git/tutorials/using-branches) > Force delete the specified branch, even if it has unmerged changes. This is the command to use if you want to permanently throw away all of the commits associated with a particular line of development.
+
+</details>
+
+<details><summary>git branch -m - Rename Branch</summary>
+
+### git branch -m - Rename Branch
+
+- [git branch](https://git-scm.com/docs/git-branch#_synopsis) documentation.
+```
+git branch (-m | -M) [<oldbranch>] <newbranch>
+```
+- With a `-m` or `-M` option, \<oldbranch> will be renamed to \<newbranch>.
+
+#### OPTION
+
+`-m`<br>
+`--move`<br>
+Move/rename a branch, together with its config and reflog.
+
+`-M`<br>
+Shortcut for `--move --force`.
+
+</details>
+
+<details><summary>git checkout - Switch branches (including main) or restore working tree files</summary>
+
+### git checkout - Switch branches (including main) or restore working tree files
+
+- [git checkout](https://git-scm.com/docs/git-checkout) documentation.
+```
+git checkout [-q] [-f] [-m] [<branch>]
+```
+- To prepare for working on `<branch>`, switch to it by updating the index and the files in the working tree, and by pointing `HEAD` at the branch.
+
+#### OPTION
+
+`-q`<br>
+`--quiet`<br>
+Quiet, suppress feedback messages.
+
+`-f`<br>
+`--force`<br>
+When switching branches, proceed even if the index or the working tree differs from HEAD, and even if there are untracked files in the way. This is used to throw away local changes and any untracked files or directories that are in the way.
+
+`-m`<br>
+`--merge`<br>
+When switching branches, if you have local modifications to one or more files that are different between the current branch and the branch to which you are switching, the command refuses to switch branches in order to preserve your modifications in context. However, with this option, a three-way merge between the current branch, your working tree contents, and the new branch is done, and you will be on the new branch.
+
+</details>
+
+<details><summary>git merge - Join two or more development histories together</summary>
+
+### git merge - Join two or more development histories together
+
+- [git merge](https://git-scm.com/docs/git-merge) documentation.
+- Incorporates changes from the named commits (since the time their histories diverged from the current branch) into the current branch. This command is used by **git pull** to incorporate changes from another repository and can be used by hand to merge changes from one branch into another.
+
+Assume the following history exists and the current branch is "`master`":
+```
+	  A---B---C topic
+	 /
+D---E---F---G master
+```
+Then "`git merge topic`" will replay the changes made on the `topic` branch since it diverged from `master` (i.e., `E`) until its current commit (`C`) on top of `master`, and record the result in a new commit along with the names of the two parent commits and a log message from the user describing the changes. Before the operation, `ORIG_HEAD` is set to the tip of the current branch (`C`).
+
+Example [Merge Workflow](https://www.atlassian.com/git/tutorials/using-branches/git-merge).
+```zsh
+# Start a new feature
+git checkout -b new-feature main
+# Edit some files
+git add <file>
+git commit -m "Start a feature"
+# Edit some files
+git add <file>
+git commit -m "Finish a feature"
+# Develop the main branch
+git checkout main
+# Edit some files
+git add <file>
+git commit -m "Make some super-stable changes to main"
+# Merge in the new-feature branch
+git merge new-feature
+git branch -d new-feature
+```
+
+</details>
+
+</details>
+<br>
+</details>
+
+<details><summary>VI Editing - Basic vi commands</summary>
 
 ### VI Editing - Basic vi commands
 
