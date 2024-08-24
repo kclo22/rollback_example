@@ -217,36 +217,73 @@ The *Fast Forward* Option
 
 <details><summary>Scenario</summary>
 
-### Scenario
+### Example Scenario for Divergents
 
-**Info**<br>
-- Command `git --version`
-- Computer A & B running git version 2.39.2 (Apple Git-143)
-
-1. Remote Repositary has one file alpha.html
-2. Computer A and B downloads the repsitary locally.
-3. Computer B created two files (beta.html & charlie.html), added, commited and pushed to Repositary.
-
-Computer B's reflog:
+**Example tested on the following specifications**<br>
 ```zsh
-edwardlo@MacEd:~/git_rebase_text|main ⇒  git reflog
-7417f19 (HEAD -> main, origin/main, origin/HEAD) HEAD@{0}: commit: 3rd git commit: 3 files
-6103166 HEAD@{1}: commit: 2nd git commit: 2 files
-a73ad43 HEAD@{2}: reset: moving to a73ad43
-287fcdc HEAD@{3}: commit: 3rd git commit: 3 files
-f704baf HEAD@{4}: commit: 2nd git commit: 2 files
-a73ad43 HEAD@{5}: reset: moving to a73ad43
-6bda313 HEAD@{6}: reset: moving to 6bda313
-6bda313 HEAD@{7}: commit: 3rd git commit: 3 files
-2a4d506 HEAD@{8}: commit: 2nd git commit: 2 files
-a73ad43 HEAD@{9}: clone: from github.com:EdwardL08/git_rebase_text.git
+git --version
+# git version 2.39.3 (Apple Git-146)
+```
+
+**Example Setup**<br>
+1. Remote Repositary is created on Github i.e. `divergent_branch_test`
+2. Computer A and B downloads the repositary locally (with one file: README.md).
+
+#### Computer A
+
+**Current Scenario After Step 2**
+```       
+    README.md Main branch
+```
+
+3. Computer A created two files (README2.md & charlie.html)
+```zsh
+touch charlie.html
+```
+4. This is added, commited and pushed to Repositary.
+```zsh
+git add charlie.html && git commit -m"1st git commit: charlie.html"
+git push
+```
+
+**Current Scenario After Step 4**
+```
+    README.md---(1 file) Main branch
+```
+
+5. Computer A's reflog `git reflog`:
+```zsh
+e6f9766 (HEAD -> main, origin/main, origin/HEAD) HEAD@{0}: commit: 1st git commit: charlie.html
+a568de8 HEAD@{1}: clone: from github.com:kclo22/divergent_branch.git
 (END)
 ```
 
-4. Computer A created one file (delta.html), added, commited but not pushed.
-5. Computer A pulls from Remote Repositary but get:
+#### Computer B
+6. Computer B created delta.html
 ```zsh
-edwardlo@Edwards-MBP:~/git_rebase_text|main ⇒  git pull
+touch delta.html
+```
+7. This is added, commited but *not pushed*.
+```zsh
+git add delta.html && git commit -m"Computer B 1st git commit: delta.html"
+```
+
+**Current Scenario After Step 7**
+```
+	delta.html Feature branch
+	/
+    README.md---(2 files) Main branch
+```
+
+8. Computer B pulls from Remote Repositary `git pull`:
+```zsh
+remote: Enumerating objects: 4, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 269 bytes | 53.00 KiB/s, done.
+From github.com:kclo22/divergent_branch
+   a568de8..e6f9766  main       -> origin/main
 hint: You have divergent branches and need to specify how to reconcile them.
 hint: You can do so by running one of the following commands sometime before
 hint: your next pull:
@@ -261,73 +298,96 @@ hint: or --ff-only on the command line to override the configured default per
 hint: invocation.
 fatal: Need to specify how to reconcile divergent branches.
 ```
+
+#### git-config
 - [git-config](https://git-scm.com/docs/git-config#_variables) documentation. Get and set repository or global options.
-	- [pull.rebase true](https://git-scm.com/docs/git-config#Documentation/git-config.txt-pullrebase) - When true, rebase branches on top of the fetched branch, instead of merging the default branch from the default remote when "git pull" is run.
-	- [pull.rebase false](https://git-scm.com/docs/git-config#Documentation/git-config.txt-pullrebase) - When false, merging the default branch from the default remote when "git pull" is run.
-	- [pull.ff](https://git-scm.com/docs/git-config#Documentation/git-config.txt-pullff) - By default, Git does not create an extra merge commit when merging a commit that is a descendant of the current commit. Instead, the tip of the current branch is fast-forwarded.
 
+| Variable | Description |
+| --- | --- |
+| [pull.rebase true](https://git-scm.com/docs/git-config#Documentation/git-config.txt-pullrebase) | When true, rebase branches on top of the fetched branch, instead of merging the default branch from the default remote when "git pull" is run. |
+| [pull.rebase false](https://git-scm.com/docs/git-config#Documentation/git-config.txt-pullrebase) | When false, merging the default branch from the default remote when "git pull" is run. |
+| [pull.ff](https://git-scm.com/docs/git-config#Documentation/git-config.txt-pullff) fast-forward | By default, Git does not create an extra merge commit when merging a commit that is a descendant of the current commit. Instead, the tip of the current branch is fast-forwarded. |
 
-6. [Stackoverflow](https://stackoverflow.com/questions/71768999/how-to-merge-when-you-get-error-hint-you-have-divergent-branches-and-need-to-s/71774640#71774640) recommends defaulting to `fast-forward only`. If I try `fast-forward only`, I know this will not work because this is not a Situation B (above). Hence, I expect an error:
-```zsh
-edwardlo@Edwards-MBP:~/git_rebase_text|main ⇒  git config pull.ff only
-edwardlo@Edwards-MBP:~/git_rebase_text|main ⇒  git pull
-fatal: Not possible to fast-forward, aborting.
+9. [Stackoverflow](https://stackoverflow.com/questions/71768999/how-to-merge-when-you-get-error-hint-you-have-divergent-branches-and-need-to-s/71774640#71774640) recommends defaulting to `fast-forward only`. 
+10. If I try `fast-forward only`, I know this will not work because this is not a Situation B (above):
+
+**Situation B**
+```
+	      D---E---F Feature
+	     /         
+    A---B---C Main
 ```
 
-7. In this case, I know the difference in the two branches does not affect each other. Hence either a `merge` or `rebase` will work. However, a different command is needed since I have set the config to use `fast-forward only`.
+11. Hence, I expect an error:
+```zsh
+git config pull.ff only
+git pull
+# fatal: Not possible to fast-forward, aborting.
+```
 
+12. In this case, I know the difference in the two branches does not affect each other. Hence either a `merge` or `rebase` will work. However, a different command is needed since I have set the config to use `fast-forward only`.
+
+#### rebase
 - [git pull --rebase](https://git-scm.com/docs/git-pull#Documentation/git-pull.txt--r) documentation.
-	- `git pull --rebase[=false|true|...]`
-	- `git pull --rebase` - merge the upstream branch into the current branch. (See The Merge Option Diagram Above)
-	- `git pull --rebase=true` - rebase the current branch on top of the upstream branch after fetching. (See The Rebase Option Diagram Above)
 
+| Variable | Description |
+| --- | --- |
+| `git pull --rebase` | merge the feature branch ([upstream](https://git-scm.com/book/en/v2/Git-Branching-Remote-Branches)) into the current branch. |
+| `git pull --rebase=true` | rebase the current branch on top of the upstream branch after fetching. |
 
+The *Merge* Option
+```
+	delta.html Feature branch
+	/		\*
+    README.md---(2 files) Main branch
+
+* Merge Feature branch to Main branch
+```
+
+The *Rebase* Option
+```
+			delta.html Main branch
+			/
+    README.md---(2 files) 
+```
+
+13. Execute the command `git pull --rebase`
 ```zsh
-# Computer A
-# merge
-edwardlo@Edwards-MBP:~/git_rebase_text|main ⇒  git pull --rebase
 Successfully rebased and updated refs/heads/main.
 ```
 
-Computer A's reflog:
+14. Check Computer B's reflog `git reflog`:
 ```zsh
-edwardlo@Edwards-MBP:~/git_rebase_text|main ⇒  git reflog
-516655f (HEAD -> main) HEAD@{0}: pull --rebase (finish): returning to refs/heads/main
-516655f (HEAD -> main) HEAD@{1}: pull --rebase (pick): 4th git commit: 4 files
-7417f19 (origin/main) HEAD@{2}: pull --rebase (start): checkout 7417f19aa8abb43aecedc6a8baa61257b5a18090
-dad9be5 HEAD@{3}: commit: 4th git commit: 4 files
-a73ad43 HEAD@{4}: commit (initial): 1st git commit: 1 file
-(END)
-```
-- Starting at commit id `7417f19`, this is the commit on remote. (It is the lastest commit in Computer B's reflog above). Git pulls `7417f19` commit, then pulls another commit `516655f` to get one forward local commit `dad9be5`.
-- Interestingly, Git checks out the main branch first then attach the feature branch's commit.
-
-
-- We reset the local repository to test the `rebase=true` command: `git reset --hard dad9be5`
-
-```zsh
-# Computer A
-# rebase
-edwardlo@Edwards-MBP:~/git_rebase_text|main ⇒  git pull --rebase=true
-Successfully rebased and updated refs/heads/main.
+f1826d5 (HEAD -> main) HEAD@{0}: pull --rebase (finish): returning to refs/heads/main
+f1826d5 (HEAD -> main) HEAD@{1}: pull --rebase (pick): Computer B 1st git commit: delta.html
+e6f9766 (origin/main, origin/HEAD) HEAD@{2}: pull --rebase (start): checkout e6f9766da66913b06f8d6c32cf0643ee1eea530e
+476efc3 HEAD@{3}: commit: Computer B 1st git commit: delta.html
+a568de8 HEAD@{4}: clone: from github.com:kclo22/divergent_branch.git
 ```
 
-Computer A's reflog:
+- Starting at commit id `e6f9766`, git checkout the main branch first, then attach the feature *pick* feature branch (i.e. delta.html file).
+
+15. We reset the local repository to test the `rebase=true` command: `git reset --hard 476efc3`
 ```zsh
-edwardlo@Edwards-MBP:~/git_rebase_text|main ⇒  git reflog
-1a743c9 (HEAD -> main) HEAD@{0}: pull --rebase=true (finish): returning to refs/heads/main
-1a743c9 (HEAD -> main) HEAD@{1}: pull --rebase=true (pick): 4th git commit: 4 files
-7417f19 (origin/main) HEAD@{2}: pull --rebase=true (start): checkout 7417f19aa8abb43aecedc6a8baa61257b5a18090
-dad9be5 HEAD@{3}: reset: moving to dad9be5
-516655f HEAD@{4}: pull --rebase (finish): returning to refs/heads/main
-516655f HEAD@{5}: pull --rebase (pick): 4th git commit: 4 files
-7417f19 (origin/main) HEAD@{6}: pull --rebase (start): checkout 7417f19aa8abb43aecedc6a8baa61257b5a18090
-dad9be5 HEAD@{7}: commit: 4th git commit: 4 files
-a73ad43 HEAD@{8}: commit (initial): 1st git commit: 1 file
-(END)
+# HEAD is now at 476efc3 Computer B 1st git commit: delta.html
 ```
-- Starting at `dad9be5 HEAD@{3}: reset: moving to dad9be5` because we did a hard reset in order to be able to use `rebase=true` command.
-- Computer A local branch is considered as the Feature branch, the Remote Repository is the main branch. Hence, Git will first bring the Remote Repository commits in first and then attach the Feature branch commits. That's why commit id `1a743c9` finishes with the comment `4th git commit: 4 files`.
+
+16. Execute command `git pull --rebase=true`
+17. Check Computer B's reflog `git reflog`:
+```zsh
+a812689 (HEAD -> main) HEAD@{0}: pull --rebase=true (finish): returning to refs/heads/main
+a812689 (HEAD -> main) HEAD@{1}: pull --rebase=true (pick): Computer B 1st git commit: delta.html
+e6f9766 (origin/main, origin/HEAD) HEAD@{2}: pull --rebase=true (start): checkout e6f9766da66913b06f8d6c32cf0643ee1eea530e
+476efc3 HEAD@{3}: reset: moving to 476efc3
+f1826d5 HEAD@{4}: pull --rebase (finish): returning to refs/heads/main
+f1826d5 HEAD@{5}: pull --rebase (pick): Computer B 1st git commit: delta.html
+e6f9766 (origin/main, origin/HEAD) HEAD@{6}: pull --rebase (start): checkout e6f9766da66913b06f8d6c32cf0643ee1eea530e
+476efc3 HEAD@{7}: commit: Computer B 1st git commit: delta.html
+a568de8 HEAD@{8}: clone: from github.com:kclo22/divergent_branch.git
+```
+
+- Starting at `476efc3 HEAD@{3}: reset: moving to 476efc3` because we did a hard reset in order to use `rebase=true` command.
+- Computer B local branch is considered as a Feature branch. The Remote is the main branch. Git will first bring the Remote commit in first, then attach the Feature branch commit. That is why commit `a812689` finishes with the comment `Computer B 1st git commit: delta.html`.
 
 </details>
 <br>
